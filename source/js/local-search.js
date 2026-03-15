@@ -1,31 +1,23 @@
 (function () {
-    var searchXmlPath = '/search.xml';
+    var searchJsonPath = '/search.json';
     var searchData = null;
 
     function fetchSearchData(callback) {
         if (searchData) { callback(searchData); return; }
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', searchXmlPath, true);
+        xhr.open('GET', searchJsonPath, true);
         xhr.onload = function () {
             if (xhr.status === 200) {
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(xhr.responseText, 'text/xml');
-                var entries = doc.querySelectorAll('entry');
-                searchData = [];
-                entries.forEach(function (entry) {
-                    var titleEl = entry.querySelector('title');
-                    var urlEl = entry.querySelector('url');
-                    var contentEl = entry.querySelector('content');
-                    searchData.push({
-                        title: titleEl ? titleEl.textContent : '',
-                        url: urlEl ? urlEl.textContent : '',
-                        content: contentEl ? contentEl.textContent : ''
-                    });
-                });
-                callback(searchData);
+                try {
+                    var result = JSON.parse(xhr.responseText);
+                    searchData = result;
+                    callback(searchData);
+                } catch (e) {
+                    console.error('Failed to parse search.json:', e);
+                }
             }
         };
-        xhr.onerror = function () { console.error('Failed to load search.xml'); };
+        xhr.onerror = function () { console.error('Failed to load search.json'); };
         xhr.send();
     }
 
