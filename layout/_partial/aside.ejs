@@ -1,7 +1,11 @@
 <aside id="aside" class="aside">
     <div id="aside-mask" class="aside-mask"></div>
     <div id="aside-inner" class="aside-inner">
-        <%- search_form({button: '<i class="icon-search-stroke"></i>'}) %>
+        <div class="search-form">
+            <button class="search-form-submit" id="local-search-submit"><i class="icon-search-stroke"></i></button>
+            <input type="text" class="search-form-input" id="local-search-input" placeholder="Search...">
+        </div>
+        <div id="local-search-result" class="local-search-result"></div>
 
         <% var t = null %>
         <% if( is_post() ) { %>
